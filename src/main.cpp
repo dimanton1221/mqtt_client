@@ -2,8 +2,11 @@
 #include <PubSubClient.h>
 
 // Inisialisasi koneksi WiFi
-const char *ssid = "modules";
-const char *password = "12345678";
+const char *ssid = "Barulah Kamar";
+const char *password = "gantipassword";
+
+// LED BUILD IN
+const int ledPin = LED_BUILTIN;
 
 // Inisialisasi klien WiFi
 WiFiClient wifiClient;
@@ -13,6 +16,8 @@ PubSubClient mqttClient(wifiClient);
 
 void setup()
 {
+    // Inisialisasi pin LED
+    pinMode(ledPin, OUTPUT);
     // Mulai serial
     Serial.begin(9600);
 
@@ -35,7 +40,7 @@ void setup()
     Serial.println(WiFi.localIP());
     Serial.print("Gateway: ");
     Serial.println(WiFi.gatewayIP());
-    const char *mqttServer = "192.168.137.1";
+    const char *mqttServer = "192.168.2.100";
 
     // Hubungkan ke MQTT broker
     mqttClient.setServer(mqttServer, 1883);
@@ -57,16 +62,7 @@ void setup()
 
 void loop()
 {
-    // Generate a random number between 0 and 100
-    int randomNumber = rand() % 101;
-
-    // Convert the random number to a string
-    char message[4];
-    itoa(randomNumber, message, 10);
-
-    // Publish the random number to the "randomTOPIK" topic
-    mqttClient.publish("random", message);
-
-    // Wait for 5 seconds before generating and publishing the next random number
-    delay(1);
+    // nyalahkan led
+    digitalWrite(ledPin, HIGH);
+    
 }
