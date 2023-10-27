@@ -5,7 +5,6 @@
 const char *ssid = "Barulah Kamar";
 const char *password = "gantipassword";
 
-// LED BUILD IN
 const int ledPin = LED_BUILTIN;
 
 // Inisialisasi klien WiFi
@@ -13,6 +12,18 @@ WiFiClient wifiClient;
 
 // Inisialisasi klien MQTT
 PubSubClient mqttClient(wifiClient);
+
+
+void callback(char* topic, byte* payload, unsigned int length) {
+    Serial.printf("Message arrived [%s] %.*s\n", topic, length, payload);
+
+    if (strncmp((char*)payload, "ON", length) == 0) {
+        digitalWrite(ledPin, LOW);
+    }
+    else if (strncmp((char*)payload, "OFF", length) == 0) {
+        digitalWrite(ledPin, HIGH);
+    }
+}
 
 void setup()
 {
@@ -44,12 +55,14 @@ void setup()
 
     // Hubungkan ke MQTT broker
     mqttClient.setServer(mqttServer, 1883);
+    mqttClient.setCallback(callback);
     while (!mqttClient.connected())
     {
         Serial.println("Connecting to MQTT...");
         if (mqttClient.connect("ESP8266Client"))
         {
             Serial.println("connected");
+            mqttClient.subscribe("lampu");
         }
         else
         {
@@ -62,7 +75,8 @@ void setup()
 
 void loop()
 {
-    // nyalahkan led
-    digitalWrite(ledPin, HIGH);
-    
+    if (!mqttClient.connected()) {
+        setup();
+    }
+    mqttClient.loop();
 }
