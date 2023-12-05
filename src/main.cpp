@@ -8,9 +8,9 @@ Servo Servoku;
 WiFiClient espClient;
 PubSubClient client(espClient);
 
-const char *ssid = "Barulah Kamar";
-const char *password = "gantipassword";
-const char *mqttServer = "192.168.2.100";
+const char *ssid = "modules";
+const char *password = "12345678";
+const char *mqttServer = "192.168.137.1";
 
 // KETERANGAN PIN
 const int Gerbang = D5;
@@ -68,8 +68,7 @@ void setup()
 
 void loop()
 {
-
-  if (!client.connected())
+ if (!client.connected())
   {
     reconnect();
   }
